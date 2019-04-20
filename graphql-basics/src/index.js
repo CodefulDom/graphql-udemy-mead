@@ -1,1 +1,3 @@
-console.log('Hello GraphQL!')
+import { message } from './myModule'
+
+console.log(message)
