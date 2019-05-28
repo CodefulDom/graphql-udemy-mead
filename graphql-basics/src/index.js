@@ -2,7 +2,22 @@ import { GraphQLServer } from 'graphql-yoga'
 
 const posts = [
   {
-    id: 34728394723
+    id: 'isbn-34728394723',
+    title: 'GraphQL',
+    body: 'GraphQL 101 is a fundamental foundations course',
+    published: false
+  },
+  {
+    id: 'isbn-34728394724',
+    title: 'React Native',
+    body: 'Learn to build native mobile applications in React',
+    published: true
+  },
+  {
+    id: 'isbn-34728394725',
+    title: 'Java',
+    body: 'Shitty, slow infratructure code that everyone loves to hate. This is Java',
+    published: true
   }
 ]
 
@@ -19,7 +34,7 @@ const typeDefs = `
 		gpa: Float
 		isMarried: String!
 		post: Post!
-		posts(id: [Int!]!): Int!
+    posts(query: String): [Post!]!
 	}
 
 	type User {
@@ -39,9 +54,6 @@ const typeDefs = `
 // Resolvers
 const resolvers = {
   Query: {
-    posts(args) {
-      return args.id
-    },
     add(parent, args, ctx, info) {
       if (args.numbers.length === 0) {
         return 0
@@ -68,6 +80,17 @@ const resolvers = {
         body: `In the beginning...`,
         published: true
       }
+    },
+    posts(parent, args, ctx, info) {
+      if (!args.query) {
+        return posts
+      }
+
+      return posts.filter((post) => {
+        const isTitleMatch = post.title.toLowerCase().includes(args.query.toLowerCase())
+        const isBodyMatch = post.body.toLowerCase().includes(args.query.toLowerCase())
+        return isTitleMatch || isBodyMatch
+      })
     },
     id() {
       return '1'
