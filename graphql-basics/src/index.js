@@ -5,19 +5,40 @@ const posts = [
     id: 'isbn-34728394723',
     title: 'GraphQL',
     body: 'GraphQL 101 is a fundamental foundations course',
-    published: false
+    published: false,
+    author: '1'
   },
   {
     id: 'isbn-34728394724',
     title: 'React Native',
     body: 'Learn to build native mobile applications in React',
-    published: true
+    published: true,
+    author: '2'
   },
   {
     id: 'isbn-34728394725',
     title: 'Java',
     body: 'Shitty, slow infratructure code that everyone loves to hate. This is Java',
-    published: true
+    published: true,
+    author: '3'
+  }
+]
+
+const users = [
+  {
+    id: '1',
+    name: 'Dominqiue Israel Hallan',
+    email: 'dhallan@icloud.com'
+  },
+  {
+    id: '2',
+    name: 'Ezra Solomon Hallan',
+    email: 'ehallan@icloud.com'
+  },
+  {
+    id: '3',
+    name: 'Elijah Xavier Hallan',
+    email: 'elihallan@icloud.com'
   }
 ]
 
@@ -48,6 +69,7 @@ const typeDefs = `
 		title: String!
 		body: String!,
 		published: Boolean!
+		author: User!
 	}
 `
 
@@ -109,6 +131,13 @@ const resolvers = {
     },
     isMarried() {
       return true
+    }
+  },
+  Post: {
+    author(parent, args, ctx, info) {
+      return users.find((user) => {
+        return user.id === parent.author
+      })
     }
   }
 }
