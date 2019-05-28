@@ -9,6 +9,7 @@ const typeDefs = `
 		isEmployed: Boolean!
 		gpa: Float
 		isMarried: String!
+		post: Post!
 	}
 
 	type User {
@@ -20,14 +21,22 @@ const typeDefs = `
 	type Post {
 		id: ID!,
 		title: String!
-		body!: String!,
-		published: Int!
+		body: String!,
+		published: Boolean!
 	}
 `
 
 // Resolvers
 const resolvers = {
   Query: {
+    post() {
+      return {
+        id: `isbn-342389749823748923`,
+        title: `Holy Bible`,
+        body: `In the beginning...`,
+        published: true
+      }
+    },
     id() {
       return '1'
     },
@@ -45,14 +54,6 @@ const resolvers = {
     },
     isMarried() {
       return true
-    }
-  },
-  post() {
-    return {
-      id: `isbn 374982374893274893245783462873647823648723`,
-      title: `Harry Potter does Harry Potter Thangs`,
-      author: `J.K. Rowling`,
-      body: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus commodi nulla dolores in similique, quis facere sit libero non perferendis illo tempora reprehenderit dolore voluptatem, quas voluptates aperiam omnis sint!`
     }
   }
 }
