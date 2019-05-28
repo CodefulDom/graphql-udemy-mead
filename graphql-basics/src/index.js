@@ -1,5 +1,11 @@
 import { GraphQLServer } from 'graphql-yoga'
 
+const posts = [
+  {
+    id: 34728394723
+  }
+]
+
 // Type Definitions = Schema
 const typeDefs = `
 	type Query {
@@ -13,6 +19,7 @@ const typeDefs = `
 		gpa: Float
 		isMarried: String!
 		post: Post!
+		posts(id: [Int!]!): Int!
 	}
 
 	type User {
@@ -32,6 +39,9 @@ const typeDefs = `
 // Resolvers
 const resolvers = {
   Query: {
+    posts(args) {
+      return args.id
+    },
     add(parent, args, ctx, info) {
       if (args.numbers.length === 0) {
         return 0
