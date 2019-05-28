@@ -1,107 +1,88 @@
 import { GraphQLServer } from 'graphql-yoga'
 
+// Scalar types - String, Boolean, Int, Float, ID
+
+// Demo user data
+const users = [
+  {
+    id: '1',
+    name: 'Dominique Hallan',
+    email: 'dhallan@hallan.com',
+    age: 27
+  },
+  {
+    id: '2',
+    name: 'Elijah',
+    email: 'elijah@example.com'
+  },
+  {
+    id: '3',
+    name: 'Ezra',
+    email: 'ezra@example.com'
+  }
+]
+
 const posts = [
   {
-    id: 'isbn-34728394723',
-    title: 'GraphQL',
-    body: 'GraphQL 101 is a fundamental foundations course',
-    published: false,
+    id: '10',
+    title: 'GraphQL 101',
+    body: 'This is how to use GraphQL...',
+    published: true,
     author: '1'
   },
   {
-    id: 'isbn-34728394724',
-    title: 'React Native',
-    body: 'Learn to build native mobile applications in React',
-    published: true,
+    id: '11',
+    title: 'GraphQL 201',
+    body: 'This is an advanced GraphQL post...',
+    published: false,
     author: '2'
   },
   {
-    id: 'isbn-34728394725',
-    title: 'Java',
-    body: 'Shitty, slow infratructure code that everyone loves to hate. This is Java',
-    published: true,
+    id: '12',
+    title: 'Programming Music',
+    body: '',
+    published: false,
     author: '3'
   }
 ]
 
-const users = [
-  {
-    id: '1',
-    name: 'Dominqiue Israel Hallan',
-    email: 'dhallan@icloud.com'
-  },
-  {
-    id: '2',
-    name: 'Ezra Solomon Hallan',
-    email: 'ehallan@icloud.com'
-  },
-  {
-    id: '3',
-    name: 'Elijah Xavier Hallan',
-    email: 'elihallan@icloud.com'
-  }
-]
-
-// Type Definitions = Schema
+// Type definitions (schema)
 const typeDefs = `
-	type Query {
-		greeting(name: String, position: String): String!
-		add(numbers: [Float!]!): Float!
-		grades: [Int!]!
-		id: ID!
-		name: String!
-		age: Int!
-		isEmployed: Boolean!
-		gpa: Float
-		isMarried: String!
-		post: Post!
-    posts(query: String): [Post!]!
-	}
+    type Query {
+        users(query: String): [User!]!
+        posts(query: String): [Post!]!
+        me: User!
+        post: Post!
+    }
 
-	type User {
-		id: ID!
-		name: String!
-		email: String!
-	}
+    type User {
+        id: ID!
+        name: String!
+        email: String!
+        age: Int
+        posts: [Post!]!
+    }
 
-	type Post {
-		id: ID!,
-		title: String!
-		body: String!,
-		published: Boolean!
-		author: User!
-	}
+    type Post {
+        id: ID!
+        title: String!
+        body: String!
+        published: Boolean!
+        author: User!
+    }
 `
 
 // Resolvers
 const resolvers = {
   Query: {
-    add(parent, args, ctx, info) {
-      if (args.numbers.length === 0) {
-        return 0
+    users(parent, args, ctx, info) {
+      if (!args.query) {
+        return users
       }
 
-      return args.numbers.reduce((accumulator, currentValue) => {
-        return accumulator + currentValue
+      return users.filter((user) => {
+        return user.name.toLowerCase().includes(args.query.toLowerCase())
       })
-    },
-    grades(parent, args, ctx, info) {
-      return [99, 80, 93]
-    },
-    greeting(parent, args, ctx, info) {
-      if (args.name) {
-        return `Hello, ${args.name}! You are my favorite ${args.position}!!`
-      } else {
-        return `Hello user!`
-      }
-    },
-    post() {
-      return {
-        id: `isbn-342389749823748923`,
-        title: `Holy Bible`,
-        body: `In the beginning...`,
-        published: true
-      }
     },
     posts(parent, args, ctx, info) {
       if (!args.query) {
@@ -114,29 +95,33 @@ const resolvers = {
         return isTitleMatch || isBodyMatch
       })
     },
-    id() {
-      return '1'
+    me() {
+      return {
+        id: '123098',
+        name: 'Mike',
+        email: 'mike@example.com'
+      }
     },
-    name() {
-      return 'Dominique Hallan'
-    },
-    age() {
-      return 36
-    },
-    isEmployed() {
-      return true
-    },
-    gpa() {
-      return 4.0
-    },
-    isMarried() {
-      return true
+    post() {
+      return {
+        id: '092',
+        title: 'GraphQL 101',
+        body: '',
+        published: false
+      }
     }
   },
   Post: {
     author(parent, args, ctx, info) {
       return users.find((user) => {
         return user.id === parent.author
+      })
+    }
+  },
+  User: {
+    posts(parent, args, ctx, info) {
+      return posts.filter((post) => {
+        return post.author === parent.id
       })
     }
   }
@@ -148,5 +133,5 @@ const server = new GraphQLServer({
 })
 
 server.start(() => {
-  console.log(`server is running at http://localhost:4000`)
+  console.log('The server is running http://localhost:4000/')
 })
