@@ -33,8 +33,13 @@ const typeDefs = `
 const resolvers = {
   Query: {
     add(parent, args, ctx, info) {
-      const sum = `${args.a + args.b}`
-      return sum
+      if (args.numbers.length === 0) {
+        return 0
+      }
+
+      return args.numbers.reduce((accumulator, currentValue) => {
+        return accumulator + currentValue
+      })
     },
     grades(parent, args, ctx, info) {
       return [99, 80, 93]
