@@ -216,7 +216,7 @@ const resolvers = {
 
       comments.push(comment)
 
-      return comments
+      return comment
     }
   },
   Post: {
