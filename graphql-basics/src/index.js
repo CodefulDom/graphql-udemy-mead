@@ -70,7 +70,7 @@ let comments = [
     id: '105',
     text: 'Nevermind. I got it to work.',
     author: '1',
-    post: '11'
+    post: '12'
   }
 ]
 
