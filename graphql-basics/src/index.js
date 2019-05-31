@@ -270,8 +270,8 @@ const resolvers = {
 
       return comment
     },
-    deleteComment() {
-      const commentIndex = comments.finIndex((comment) => comment.id === args.comment)
+    deleteComment(parent, args, ctx, info) {
+      const commentIndex = comments.findIndex((comment) => comment.id === args.id)
 
       if (commentIndex === -1) {
         throw new Error('Comment not found')
