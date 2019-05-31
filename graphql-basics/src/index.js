@@ -271,15 +271,13 @@ const resolvers = {
       return comment
     },
     deleteComment() {
-      const commentIndex = comments.some((comment) => comment.id === args.comment)
+      const commentIndex = comments.finIndex((comment) => comment.id === args.comment)
 
-      if (commentIndex) {
+      if (commentIndex === -1) {
         throw new Error('Comment not found')
       }
 
-      deletedComment = comment.splice(commentIndex, 1)
-
-      comments = comments.filter((comment) => comment.id !== args.id)
+      const deletedComment = comments.splice(commentIndex, 1)
 
       return deletedComment[0]
     }
