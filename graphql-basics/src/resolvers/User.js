@@ -11,3 +11,5 @@ const User = {
   }
 }
 export { User as default }
+
+console.log(`hey`)
